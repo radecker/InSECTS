@@ -1,4 +1,4 @@
-# InSECTS 
+# InSECTS Vehicle Testbed
 Johns Hopkins University Space Systems Engineer InSECTS team
 
 The goal of this project to develop the digital infrastructure needed for a remote team of engineers to develop, build, and test satellite systems. 
