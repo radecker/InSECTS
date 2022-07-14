@@ -5,6 +5,7 @@ WORKDIR /usr/src/app
 
 # add the python application
 ADD autonomy_app.py .
+ADD messages_pb2.py .
 
 # copy requirements file to working directory
 COPY requirements.txt ./

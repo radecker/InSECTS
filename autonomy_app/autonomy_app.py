@@ -1,15 +1,32 @@
-#!/usr/bin/env python3
 
-# echo-client.py
-
+import messages_pb2
 import socket
 
-HOST = "127.0.0.1"  # The server's hostname or IP address
-PORT = 44321  # The port used by the server
+HEADER = 64
+PORT = 5051
+HEADER_FORMAT = 'utf-8'
+dmsg = messages_pb2.Message()
+dmsg.disconnect = True
+DISCONNECT_MESSAGE = dmsg
+SERVER = "127.0.0.1"
+ADDR = (SERVER, PORT)
 
-with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-    s.connect((HOST, PORT))
-    s.sendall(b"Hello, world")
-    data = s.recv(1024)
+client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+client.connect(ADDR)
 
-print(f"Received {data!r}")
+def send(msg):
+    data = msg.SerializeToString()
+    msg_length = len(data)
+    send_length = str(msg_length).encode(HEADER_FORMAT)
+    send_length += b' ' * (HEADER - len(send_length))
+    client.send(send_length)
+    client.send(data)
+    print(client.recv(2048).decode(HEADER_FORMAT))
+
+
+msg = messages_pb2.Message()
+msg.sender = "Ryan Decker"
+msg.destination = "The World"
+send(msg)
+
+send(DISCONNECT_MESSAGE)
