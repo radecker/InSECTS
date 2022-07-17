@@ -1,5 +1,8 @@
-# Custom Ignores
-*/dependencies/
+# Ignore common libraries that are copied to app folders
+*_app/message_pb2.py
+*_app/tcp_client.py
+*_app/tcp_server.py
+*_app/udp_client.py
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
