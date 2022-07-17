@@ -1,4 +1,6 @@
 #!/bin/bash
+set -e
+set -o pipefail
 
 # Run the common library build first
 cd common/
@@ -10,4 +12,6 @@ cd ../hal/
 cd ../autonomy_app/
 ./build.sh
 cd ../demo_app/
+./build.sh
+cd ../sdr_app/
 ./build.sh

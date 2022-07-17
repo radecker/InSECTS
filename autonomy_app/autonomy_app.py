@@ -1,32 +1,19 @@
+#!/usr/bin/env python3
 
-import messages_pb2
-import socket
-
-HEADER = 64
-PORT = 5051
-HEADER_FORMAT = 'utf-8'
-dmsg = messages_pb2.Message()
-dmsg.disconnect = True
-DISCONNECT_MESSAGE = dmsg
-SERVER = "127.0.0.1"
-ADDR = (SERVER, PORT)
-
-client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-client.connect(ADDR)
-
-def send(msg):
-    data = msg.SerializeToString()
-    msg_length = len(data)
-    send_length = str(msg_length).encode(HEADER_FORMAT)
-    send_length += b' ' * (HEADER - len(send_length))
-    client.send(send_length)
-    client.send(data)
-    print(client.recv(2048).decode(HEADER_FORMAT))
+from tcp_client import TCPClient
+from udp_client import UDPClient
+import message_pb2 as proto
+import time
 
 
-msg = messages_pb2.Message()
-msg.sender = "Ryan Decker"
-msg.destination = "The World"
-send(msg)
-
-send(DISCONNECT_MESSAGE)
+if __name__ == "__main__":
+    udp_client = UDPClient(id="vehicle.autonomy_app")
+    udp_client.add_listener("224.1.1.1", 5050)
+    udp_client.add_sender("224.1.1.1", 5050)
+    msg = proto.Message()
+    while True:
+        messages = udp_client.get_messages()
+        for msg in messages:
+            print(f"Received: {msg}")
+            time.sleep(3)
+            udp_client.send(msg=msg, group="224.1.1.1", port=5050)

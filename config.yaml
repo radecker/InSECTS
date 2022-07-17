@@ -5,3 +5,8 @@
   emulate-arduino: false  # Should the arduino be emulated (i.e. arduino not present)
   emulate-thermal: false  # Should the thermal system be emulated
   telemetry-freq: 1.0     # Hz
+
+  command-multicast-ip: "224.1.1.10"
+  command-multicast-port: 5050
+  telemetry-multicast-ip: "224.1.1.20"
+  telemetry-multicast-port: 5060
