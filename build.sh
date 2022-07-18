@@ -19,3 +19,6 @@ cd ../autonomy_app/
 ./build.sh
 cd ../demo_app/
 ./build.sh
+
+# Remove the old dangling images to reduce disk usage (TODO: Make this work)
+# docker rmi $(docker images -qa -f 'dangling=true') 
