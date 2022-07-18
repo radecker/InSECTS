@@ -1,21 +1,28 @@
 import yaml
 
-with open("/home/jhu-ep/InSECTS-Vehicle-Testbed/config.yaml", 'r') as stream:
-    try:
-        print(yaml.safe_load(stream))
-    except yaml.YAMLError as exc:
-        print(exc)
-
 
 class ConfigLoader():
-    def __init__(self) -> None:
-        pass
+    def __init__(self, config_path: str) -> None:
+        self.config_path = config_path
+        self.__config_data = None   # Dictionary of config data
 
     def __parse_params(self):
         pass
 
-    def read_file(self):
-        pass
+    def read_config(self):
+        with open(self.config_path, 'r') as stream:
+            try:
+                self.__config_data = yaml.safe_load(stream)
+                return self.__config_data
+            except yaml.YAMLError as exc:
+                print(exc)
+                return None
 
-    def get_config(self):
-        pass
+    def get_config_data(self):
+        return self.__config_data
+
+
+if __name__=="__main__":
+    config_fp = "/home/jhu-ep/InSECTS-Vehicle-Testbed/config.yaml"
+    cl = ConfigLoader(config_path=config_fp)
+    data = cl.read_config()
