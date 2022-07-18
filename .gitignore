@@ -1,8 +1,14 @@
-# Ignore common libraries that are copied to app folders
+# Ignore common libraries that are copied to app/service folders
 *_app/message_pb2.py
 *_app/tcp_client.py
 *_app/tcp_server.py
 *_app/udp_client.py
+*_app/BaseApp.py
+*_service/message_pb2.py
+*_service/tcp_client.py
+*_service/tcp_server.py
+*_service/udp_client.py
+*_service/BaseApp.py
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
-from tcp_server import TCPServer
-from udp_client import UDPClient
+from TCPServer import TCPServer
+from UDPClient import UDPClient
 import message_pb2 as proto
 import time
 

@@ -6,12 +6,16 @@ set -o pipefail
 cd common/
 ./build.sh
 
-# Build each individual app
-cd ../hal/
+# Build the critical infrastructure (i.e. any service)
+cd ../hal_service/
 ./build.sh
+cd ../logger_service/
+./build.sh
+cd ../sdr_app/
+./build.sh
+
+# Build the custom apps
 cd ../autonomy_app/
 ./build.sh
 cd ../demo_app/
-./build.sh
-cd ../sdr_app/
 ./build.sh

@@ -4,10 +4,10 @@ FROM python:3.9
 WORKDIR /usr/src/app
 
 # add the python application
-ADD hal.py .
+ADD hal_service.py .
 ADD message_pb2.py .
-ADD tcp_server.py .
-ADD udp_client.py .
+ADD TCPServer.py .
+ADD UDPClient.py .
 
 # copy requirements file to working directory
 COPY requirements.txt ./
@@ -16,4 +16,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-ENTRYPOINT ["python", "./hal.py"]
+ENTRYPOINT ["python", "./hal_service.py"]
