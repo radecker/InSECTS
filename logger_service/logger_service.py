@@ -1,19 +1,26 @@
 #!/usr/bin/env python3
 
-from tcp_client import TCPClient
-from udp_client import UDPClient
-import message_pb2 as proto
+from BaseApp import BaseApp
+import datetime
 import time
 
 
+class LoggerService(BaseApp):
+    def __init__(self) -> None:
+        self.log = None
+        super().__init__("vehicle.logger_service")
+
+    def setup(self):
+        print("Logger SETUP!")
+        print(self.config_params)
+        self.log = open(f"log_{datetime.datetime.utcnow()}.log", 'w')
+
+    def run(self):
+        msgs = self.udp_client.get_messages()
+        for msg in msgs:
+            self.log.write(msg)
+            print(msg)
+
+
 if __name__ == "__main__":
-    udp_client = UDPClient(id="vehicle.autonomy_app")
-    udp_client.add_listener("224.1.1.1", 5050)
-    udp_client.add_sender("224.1.1.1", 5050)
-    msg = proto.Message()
-    while True:
-        messages = udp_client.get_messages()
-        for msg in messages:
-            print(f"Received: {msg}")
-            time.sleep(3)
-            udp_client.send(msg=msg, group="224.1.1.1", port=5050)
+    LoggerService()   # Runs the app
