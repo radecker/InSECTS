@@ -2,18 +2,24 @@
 
 from TCPClient import TCPClient
 from UDPClient import UDPClient
+from BaseApp import BaseApp
 import message_pb2 as proto
 import time
 
 
+class AutonomyApp(BaseApp):
+    def __init__(self) -> None:
+        super().__init__("vehicle.autonomy_app")
+
+    def setup(self):
+        print("SETUP!")
+        print(self.config_params)
+
+    def run(self):
+        print("Autonomy Run!")
+        time.sleep(1)
+
+
 if __name__ == "__main__":
-    udp_client = UDPClient(id="vehicle.autonomy_app")
-    udp_client.add_listener("224.1.1.1", 5050)
-    udp_client.add_sender("224.1.1.1", 5050)
-    msg = proto.Message()
-    while True:
-        messages = udp_client.get_messages()
-        for msg in messages:
-            print(f"Received: {msg}")
-            time.sleep(3)
-            udp_client.send(msg=msg, group="224.1.1.1", port=5050)
+    AutonomyApp()   # Runs the app
+    
