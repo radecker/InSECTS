@@ -1,0 +1,17 @@
+syntax = "proto2";
+
+package InSECTS;
+
+message ConfigParams {
+    optional string version = 1;
+    optional bool virtual_machine = 2;
+    optional bool emulate_sdr = 3;
+    optional bool emulate_arduino = 4;
+    optional bool emulate_thermal = 5;
+    optional double telemetry_freq = 6;
+    
+    optional string command_multicast_ip = 7;
+    optional int32 command_multicast_port = 8;
+    optional string telemetry_multicast_ip = 9;
+    optional int32 telemetry_multicast_port = 10;
+}
