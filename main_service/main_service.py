@@ -2,18 +2,47 @@
 
 from TCPClient import TCPClient
 from UDPClient import UDPClient
-import message_pb2 as proto
+from ConfigLoader import ConfigLoader
+
+import message_pb2
+import config_pb2
 import time
+import subprocess
+
+STARTUP_IP = "224.1.1.99"
+STARTUP_PORT = 5099
+
+
+def ConvertConfigDictToProto(config: dict) -> message_pb2.Message:
+    msg = message_pb2.Message()
+    config_msg = config_pb2.ConfigParams()
+    for key, val in config.items():
+        setattr(config_msg, key, val)
+    msg.config_params.CopyFrom(config_msg)
+    
+    return msg
 
 
 if __name__ == "__main__":
-    udp_client = UDPClient(id="vehicle.autonomy_app")
-    udp_client.add_listener("224.1.1.1", 5050)
-    udp_client.add_sender("224.1.1.1", 5050)
-    msg = proto.Message()
-    while True:
-        messages = udp_client.get_messages()
-        for msg in messages:
-            print(f"Received: {msg}")
-            time.sleep(3)
-            udp_client.send(msg=msg, group="224.1.1.1", port=5050)
+    # Load the config parameters
+    configs = ConfigLoader("config.yaml").read_config()
+
+    # Convert the config dict to a protobuf message
+    msg = ConvertConfigDictToProto(configs)
+    
+    # Start execution of other core infrastructure services
+    # TODO: This is only needed while K3 is not running
+    subprocess.Popen(["docker", "run", "--network=host", "autonomy_app"])
+    # subprocess.Popen(["docker", "run", "--network=host", "--privileged", "logger_service"])
+
+    # os.system("docker run --network=host autonomy_app")
+
+    # Send out the config params on the startup multicast group
+    time.sleep(3)   # 3 sec delay to wait for other services to start listening
+    udp_client = UDPClient("main_service")
+    udp_client.add_sender(group=STARTUP_IP, port=STARTUP_PORT)
+    udp_client.add_listener(group=STARTUP_IP, port=STARTUP_PORT)
+    udp_client.send(msg, group=STARTUP_IP, port=STARTUP_PORT)
+
+
+    

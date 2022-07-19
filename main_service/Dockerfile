@@ -5,6 +5,7 @@ WORKDIR /usr/src/app
 
 # add the python application
 ADD main_service.py .
+ADD ConfigLoader.py .
 ADD message_pb2.py .
 ADD TCPClient.py .
 ADD UDPClient.py .
