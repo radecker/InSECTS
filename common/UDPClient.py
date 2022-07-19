@@ -74,7 +74,7 @@ class UDPClient():
                 sock.sendto(send_length, (group, port))
                 sock.sendto(data, (group, port))
 
-    def get_messages(self) -> proto.Message:
+    def get_messages(self) -> list:
         buf = []
         # Reads all messages in queue in FIFO manner
         while not self.__receive_queue.empty():
