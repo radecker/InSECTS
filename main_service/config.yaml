@@ -10,3 +10,8 @@
   command_multicast_port: 5050
   telemetry_multicast_ip: "224.1.1.20"
   telemetry_multicast_port: 5060
+
+  # ---- sdr_app ----
+  sdr_tcp_client_ip: "127.0.0.1"
+  sdr_tcp_client_port: 5000
+
