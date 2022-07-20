@@ -8,4 +8,4 @@ cp ../common/TCPClient.py .
 cp ../common/UDPClient.py .
 
 # Build the docker image and tag it
-docker build -t logger_service .
+docker build -t vehicle.logger_service .

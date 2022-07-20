@@ -11,4 +11,4 @@ cp ../common/TCPServer.py .
 cp ../common/UDPClient.py .
 
 # Build the docker image and tag it
-docker build -t hal_service .
+docker build -t vehicle.hal_service .

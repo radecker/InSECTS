@@ -8,7 +8,7 @@ import time
 
 
 if __name__ == "__main__":
-    udp_client = UDPClient(id="vehicle.hal_app")
+    udp_client = UDPClient(id="vehicle.hal_service")
     udp_client.add_listener("224.1.1.1", 5050)
     while True:
         messages = udp_client.get_messages()

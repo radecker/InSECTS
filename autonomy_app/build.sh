@@ -9,4 +9,4 @@ cp ../common/TCPServer.py .
 cp ../common/UDPClient.py .
 
 # Build the docker image and tag it
-docker build -t autonomy_app .
+docker build -t vehicle.autonomy_app .

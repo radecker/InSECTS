@@ -32,7 +32,7 @@ if __name__ == "__main__":
     
     # Start execution of other core infrastructure services
     # TODO: This is only needed while K3 is not running
-    subprocess.Popen(["docker", "run", "--network=host", "autonomy_app"])
+    # subprocess.Popen(["docker", "run", "--network=host", "autonomy_app"])
     # subprocess.Popen(["docker", "run", "--network=host", "--privileged", "logger_service"])
 
     # os.system("docker run --network=host autonomy_app")
