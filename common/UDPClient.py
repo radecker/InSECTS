@@ -18,12 +18,10 @@ Ways this can be improved:
 
 class UDPClient():
     def __init__(self, id: str) -> None:
-        # self.addresses = dict()
         self.id = id
         self.listen_all = False
 
         # Dictionary of queues used to maintain sender/listener ID capability
-        # self.__receive_queue = queue.Queue()
         self.__receive_queues = dict()
         
         self.__sock = None
@@ -33,7 +31,6 @@ class UDPClient():
         self.__header_format = 'utf-8'
 
     def add_listener(self, group: str, port: int) -> None:
-        # self.addresses[group] = port
         self.__receive_queues[(group, port)] = queue.Queue()
         thread = threading.Thread(target=self.__add_listener, args=(group, port))
         thread.start()
@@ -57,7 +54,6 @@ class UDPClient():
                 msg = proto.Message()
                 msg.ParseFromString(data)
                 self.__receive_queues[(group, port)].put(msg)
-                # self.__receive_queue.put(msg)
         sock.close()
 
     def send(self, msg: proto.Message, group: str, port: int, destination="all") -> None:
