@@ -15,3 +15,6 @@
   sdr_tcp_client_ip: "127.0.0.1"
   sdr_tcp_client_port: 5000
 
+  # ---- hal_service ----
+  arduino_address: "/dev/ttyACM0"
+
