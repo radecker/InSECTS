@@ -9,12 +9,13 @@ message Message {
     optional string destination = 1;
     optional string sender = 2;
 
-    optional bool disconnect = 3;
+    optional bool ack = 3;
+    optional bool disconnect = 4;
 
-    optional Command command = 4;
-    optional Telemetry telemetry = 5;
+    optional Command command = 5;
+    optional Telemetry telemetry = 6;
 
-    optional ConfigParams config_params = 6;
+    optional ConfigParams config_params = 7;
 }
 
 //---------------------------------------------

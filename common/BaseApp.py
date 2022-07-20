@@ -17,10 +17,18 @@ General sequence:
     5. Call Run
 """
 
+"""
+Todo:
+    1. Add scheduled send
+    2. Add some sort of routing class
+"""
+
 class BaseApp():
     def __init__(self, id: str) -> None:
         self.udp_client = UDPClient(id=id)
         self.config_params = None
+        self.command_queue = []
+        self.telemetry_queue = []
 
         self.__startup_group = "224.1.1.99"
         self.__startup_port = 5099
@@ -32,6 +40,8 @@ class BaseApp():
         self.__initialize()
         self.setup()
         while True:
+            self.command_queue = self.udp_client.get_messages(self.__command_group, self.__command_port)
+            self.telemetry_queue = self.udp_client.get_messages(self.__telemetry_group, self.__telemetry_port)
             self.run()
 
     def __initialize(self):
@@ -40,6 +50,7 @@ class BaseApp():
         self.udp_client.add_listener(group=self.__startup_group, port=self.__startup_port)
         self.udp_client.add_sender(group=self.__startup_group, port=self.__startup_port)
         self.__wait_for_config_params()
+        self.__ack_config()
         self.__connect_command_group()
         self.__connect_telemetry_group()
 
@@ -51,6 +62,11 @@ class BaseApp():
             for message in messages:
                 if message.HasField("config_params"):
                     self.config_params = message.config_params
+
+    def __ack_config(self):
+        msg = proto.Message()
+        msg.ack = True
+        self.udp_client.send(msg, self.__startup_group, self.__startup_port, destination="main_service")
 
     def __connect_command_group(self):
         """Setup connection and start listening for any commands
@@ -68,17 +84,23 @@ class BaseApp():
         self.udp_client.add_listener(group=self.__telemetry_group, port=self.__telemetry_port)
         self.udp_client.add_sender(group=self.__telemetry_group, port=self.__telemetry_port)
 
-    def setup():
+    def send_command(self, msg: proto.Message, destination="all"):
+        self.udp_client.send(self.__command_group, self.__command_port, destination)
+
+    def send_telemetry(self, msg: proto.Message, destination="all"):
+        self.udp_client.send(self.__telemetry_group, self.__telemetry_port, destination)
+
+    def setup(self):
         """Runs once prior to Run() loop
         """
         raise NotImplementedError()
 
-    def run():
+    def run(self):
         """runs in a loop continously
         """
         raise NotImplementedError()
 
-    def shutdown():
+    def shutdown(self):
         """Called when the system shuts down
         """
         raise NotImplementedError()

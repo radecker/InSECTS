@@ -44,5 +44,8 @@ if __name__ == "__main__":
     udp_client.add_listener(group=STARTUP_IP, port=STARTUP_PORT)
     udp_client.send(msg, group=STARTUP_IP, port=STARTUP_PORT)
 
-
-    
+    while True:
+        msgs = udp_client.get_messages()
+        for msg in msgs:
+            if msg.destination == "main_service":
+                print(msg)
