@@ -17,6 +17,8 @@ class AutonomyApp(BaseApp):
 
     def run(self):
         print("Autonomy Run!")
+        # Check for command messages
+        # Check for telemetry messages
         time.sleep(1)
 
 

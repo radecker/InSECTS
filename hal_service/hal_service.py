@@ -2,7 +2,9 @@
 
 from TCPServer import TCPServer
 from BaseApp import BaseApp
+from Arduino import Arduino
 import message_pb2 as proto
+import queue
 import serial
 import time
 
@@ -14,9 +16,11 @@ Use Cases:
     2. ????
 """
 
+
+
 class HalService(BaseApp):
     def __init__(self) -> None:
-        self.arduino_addr = None
+        self.arduino = None
         super().__init__(id="vehicle.hal_service")
 
     def _send_to_arduino(self):
@@ -28,10 +32,12 @@ class HalService(BaseApp):
             pass
 
     def setup(self):
-        self.arduino_addr = self.config_params.
+        config = self.config_params
+        self.arduino = Arduino(port=config.arduino_address, baudrate=config.serial_baudrate)
 
     def run(self):
-        pass
+        if len(self.command_queue):
+            self.arduino.send_msg(self.command_queue.pop())
 
     def shutdown(self):
         pass

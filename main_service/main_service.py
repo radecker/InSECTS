@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+from email import message
 from TCPClient import TCPClient
 from UDPClient import UDPClient
 from ConfigLoader import ConfigLoader
@@ -43,7 +44,15 @@ if __name__ == "__main__":
     udp_client.add_sender(group=STARTUP_IP, port=STARTUP_PORT)
     udp_client.add_listener(group=STARTUP_IP, port=STARTUP_PORT)
     udp_client.send(msg, group=STARTUP_IP, port=STARTUP_PORT)
-
+    time.sleep(2)
+    msg = message_pb2.Message()
+    cmd = message_pb2.Command()
+    sp = message_pb2.SetServoPosition()
+    sp.servo_pos = 100.0
+    cmd.set_servo_position.CopyFrom(sp)
+    msg.command.CopyFrom(cmd)
+    udp_client.add_sender(group=configs["command_multicast_ip"], port=configs["command_multicast_port"])
+    udp_client.send(msg, group=configs["command_multicast_ip"], port=configs["command_multicast_port"])
     while True:
         msgs = udp_client.get_messages()
         for msg in msgs:

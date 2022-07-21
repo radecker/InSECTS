@@ -6,6 +6,7 @@
 *_app/UDPClient.py
 *_app/BaseApp.py
 *_app/ConfigLoader.py
+*_app/Arduino.py
 *_service/message_pb2.py
 *_service/config_pb2.py
 *_service/TCPClient.py
@@ -13,6 +14,7 @@
 *_service/UDPClient.py
 *_service/BaseApp.py
 *_service/ConfigLoader.py
+*_service/Arduino.py
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

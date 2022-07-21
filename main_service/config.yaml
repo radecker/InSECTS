@@ -17,4 +17,5 @@
 
   # ---- hal_service ----
   arduino_address: "/dev/ttyACM0"
+  serial_baudrate: 115200
 
