@@ -20,7 +20,9 @@ class SDRApp(BaseApp):
         ip = self.config_params.sdr_tcp_client_ip
         port = self.config_params.sdr_tcp_client_port
         self.tcp_client = TCPClient(ip=ip, port=port, sender="vehicle.sdr_app")
-        self.tcp_client.start()
+        while not self.tcp_client.active:
+            self.tcp_client.connect()
+            time.sleep(2)
 
     def run(self):
         if len(self.command_queue):
