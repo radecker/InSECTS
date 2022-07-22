@@ -85,10 +85,10 @@ class BaseApp():
         self.udp_client.add_sender(group=self.__telemetry_group, port=self.__telemetry_port)
 
     def send_command(self, msg: proto.Message, destination="all"):
-        self.udp_client.send(self.__command_group, self.__command_port, destination)
+        self.udp_client.send(msg, self.__command_group, self.__command_port, destination)
 
     def send_telemetry(self, msg: proto.Message, destination="all"):
-        self.udp_client.send(self.__telemetry_group, self.__telemetry_port, destination)
+        self.udp_client.send(msg, self.__telemetry_group, self.__telemetry_port, destination)
 
     def setup(self):
         """Runs once prior to Run() loop
