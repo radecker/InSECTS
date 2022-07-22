@@ -16,11 +16,12 @@ class LoggerService(BaseApp):
         self.log = open(f"network_traffic.log", 'w')
 
     def run(self):
-        msgs = self.udp_client.get_messages()
-        for msg in msgs:
-            self.log.write(msg)
-            print(msg)
-
+        if len(self.telemetry_queue):
+            print(datetime.datetime.now().ctime())
+            print(self.telemetry_queue.pop())
+        if len(self.command_queue):
+            print(datetime.datetime.now().ctime())
+            print(self.command_queue.pop())
 
 if __name__ == "__main__":
     LoggerService()   # Runs the app
