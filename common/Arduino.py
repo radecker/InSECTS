@@ -16,17 +16,29 @@ class Arduino():
         # This function needs to be carefully maintained until a better method is implemented
         if msg.HasField("command"):
             if msg.command.HasField("set_servo_position"):
-                return f"1, {msg.command.set_servo_position.servo_pos}"
+                return f"1,{msg.command.set_servo_position.servo_pos}"
             if msg.command.HasField("set_fan_speed"):
-                return f"2, {msg.command.set_fan_speed.fan_speed}"
+                return f"2,{msg.command.set_fan_speed.fan_speed}"
             if msg.command.HasField("set_fan_state"):
-                return f"3, {int(msg.command.set_fan_state.fan_state)}"
-            if msg.command.HasField("set_autonomy_state"):
-                return f"4, {int(msg.command.set_autonomy_state.autonomy_state)}"
+                return f"3,{int(msg.command.set_fan_state.fan_state)}"
         if msg.HasField("telemetry"):
             pass
         return None
 
+    def translate_serial_to_proto(self, serial_buf):
+        serial = serial_buf.split(',')
+        msg = proto.Message()
+        tlm = proto.Telemetry()
+        if serial[0] == '1':  # Temperature reading
+            data = proto.TemperatureData()
+            data.sensor_id = int(serial[1])
+            data.sensor_value = float(serial[2])
+            tlm.temperature_data.CopyFrom(data)
+        if serial[1] == '2':
+            pass
+        msg.telemetry.CopyFrom(tlm)
+
+        return msg
 
     def __connect(self) -> None:
         self.conn = serial.Serial(port=self.port, baudrate=self.baudrate, timeout=1)
@@ -42,5 +54,6 @@ class Arduino():
     def __receive(self):
         while True:
             while self.conn.in_waiting:
-                data = self.conn.readline()
-                self.messages.append(data)
+                serial_buf = self.conn.readline().decode('utf-8').rstrip()
+                msg = self.translate_serial_to_proto(serial_buf)
+                self.messages.append(msg)

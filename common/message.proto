@@ -48,8 +48,8 @@ message SetAutonomyState {
 //          Telemetry Messages Here
 //---------------------------------------------
 message Telemetry {
-    repeated TemperatureData temperature_reading = 1;
-    repeated FanSpeedData fan_speed_reading = 2;
+    optional TemperatureData temperature_data = 1;
+    optional FanSpeedData fan_speed_reading = 2;
 }
 
 message TemperatureData {

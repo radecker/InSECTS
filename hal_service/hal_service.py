@@ -36,8 +36,15 @@ class HalService(BaseApp):
         self.arduino = Arduino(port=config.arduino_address, baudrate=config.serial_baudrate)
 
     def run(self):
+        # Send any command messages
         if len(self.command_queue):
             self.arduino.send_msg(self.command_queue.pop())
+        
+        # Ready any messages from arduino
+        if len(self.arduino.messages):
+            msg = self.arduino.messages.pop()
+            print(msg)
+            self.send_telemetry(msg)
 
     def shutdown(self):
         pass
