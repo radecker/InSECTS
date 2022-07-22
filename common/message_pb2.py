@@ -20,7 +20,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto2',
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\rmessage.proto\x12\x07InSECTS\x1a\x0c\x63onfig.proto\"\xc7\x01\n\x07Message\x12\x13\n\x0b\x64\x65stination\x18\x01 \x01(\t\x12\x0e\n\x06sender\x18\x02 \x01(\t\x12\x0b\n\x03\x61\x63k\x18\x03 \x01(\x08\x12\x12\n\ndisconnect\x18\x04 \x01(\x08\x12!\n\x07\x63ommand\x18\x05 \x01(\x0b\x32\x10.InSECTS.Command\x12%\n\ttelemetry\x18\x06 \x01(\x0b\x32\x12.InSECTS.Telemetry\x12,\n\rconfig_params\x18\x07 \x01(\x0b\x32\x15.InSECTS.ConfigParams\"\xd1\x01\n\x07\x43ommand\x12\x35\n\x12set_servo_position\x18\x01 \x01(\x0b\x32\x19.InSECTS.SetServoPosition\x12+\n\rset_fan_speed\x18\x02 \x01(\x0b\x32\x14.InSECTS.SetFanSpeed\x12+\n\rset_fan_state\x18\x03 \x01(\x0b\x32\x14.InSECTS.SetFanState\x12\x35\n\x12set_autonomy_state\x18\x04 \x01(\x0b\x32\x19.InSECTS.SetAutonomyState\"%\n\x10SetServoPosition\x12\x11\n\tservo_pos\x18\x01 \x01(\x01\" \n\x0bSetFanSpeed\x12\x11\n\tfan_speed\x18\x01 \x01(\x01\" \n\x0bSetFanState\x12\x11\n\tfan_state\x18\x01 \x01(\x08\"*\n\x10SetAutonomyState\x12\x16\n\x0e\x61utonomy_state\x18\x01 \x01(\x08\"q\n\tTelemetry\x12\x32\n\x10temperature_data\x18\x01 \x01(\x0b\x32\x18.InSECTS.TemperatureData\x12\x30\n\x11\x66\x61n_speed_reading\x18\x02 \x01(\x0b\x32\x15.InSECTS.FanSpeedData\":\n\x0fTemperatureData\x12\x11\n\tsensor_id\x18\x01 \x01(\x05\x12\x14\n\x0csensor_value\x18\x02 \x01(\x01\"1\n\x0c\x46\x61nSpeedData\x12\x0e\n\x06\x66\x61n_id\x18\x01 \x01(\x05\x12\x11\n\tfan_speed\x18\x02 \x01(\x01'
+  serialized_pb=b'\n\rmessage.proto\x12\x07InSECTS\x1a\x0c\x63onfig.proto\"\xdf\x01\n\x07Message\x12\x13\n\x0b\x64\x65stination\x18\x01 \x01(\t\x12\x0e\n\x06sender\x18\x02 \x01(\t\x12\x0b\n\x03\x61\x63k\x18\x03 \x01(\x08\x12\x12\n\ndisconnect\x18\x04 \x01(\x08\x12!\n\x07\x63ommand\x18\x05 \x01(\x0b\x32\x10.InSECTS.Command\x12%\n\ttelemetry\x18\x06 \x01(\x0b\x32\x12.InSECTS.Telemetry\x12,\n\rconfig_params\x18\x07 \x01(\x0b\x32\x15.InSECTS.ConfigParams\x12\x16\n\x0erequest_config\x18\x08 \x01(\x08\"\xd1\x01\n\x07\x43ommand\x12\x35\n\x12set_servo_position\x18\x01 \x01(\x0b\x32\x19.InSECTS.SetServoPosition\x12+\n\rset_fan_speed\x18\x02 \x01(\x0b\x32\x14.InSECTS.SetFanSpeed\x12+\n\rset_fan_state\x18\x03 \x01(\x0b\x32\x14.InSECTS.SetFanState\x12\x35\n\x12set_autonomy_state\x18\x04 \x01(\x0b\x32\x19.InSECTS.SetAutonomyState\"%\n\x10SetServoPosition\x12\x11\n\tservo_pos\x18\x01 \x01(\x01\" \n\x0bSetFanSpeed\x12\x11\n\tfan_speed\x18\x01 \x01(\x01\" \n\x0bSetFanState\x12\x11\n\tfan_state\x18\x01 \x01(\x08\"*\n\x10SetAutonomyState\x12\x16\n\x0e\x61utonomy_state\x18\x01 \x01(\x08\"q\n\tTelemetry\x12\x32\n\x10temperature_data\x18\x01 \x01(\x0b\x32\x18.InSECTS.TemperatureData\x12\x30\n\x11\x66\x61n_speed_reading\x18\x02 \x01(\x0b\x32\x15.InSECTS.FanSpeedData\":\n\x0fTemperatureData\x12\x11\n\tsensor_id\x18\x01 \x01(\x05\x12\x14\n\x0csensor_value\x18\x02 \x01(\x01\"1\n\x0c\x46\x61nSpeedData\x12\x0e\n\x06\x66\x61n_id\x18\x01 \x01(\x05\x12\x11\n\tfan_speed\x18\x02 \x01(\x01'
   ,
   dependencies=[config__pb2.DESCRIPTOR,])
 
@@ -84,6 +84,13 @@ _MESSAGE = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='request_config', full_name='InSECTS.Message.request_config', index=7,
+      number=8, type=8, cpp_type=7, label=1,
+      has_default_value=False, default_value=False,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],
@@ -97,7 +104,7 @@ _MESSAGE = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=41,
-  serialized_end=240,
+  serialized_end=264,
 )
 
 
@@ -149,8 +156,8 @@ _COMMAND = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=243,
-  serialized_end=452,
+  serialized_start=267,
+  serialized_end=476,
 )
 
 
@@ -181,8 +188,8 @@ _SETSERVOPOSITION = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=454,
-  serialized_end=491,
+  serialized_start=478,
+  serialized_end=515,
 )
 
 
@@ -213,8 +220,8 @@ _SETFANSPEED = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=493,
-  serialized_end=525,
+  serialized_start=517,
+  serialized_end=549,
 )
 
 
@@ -245,8 +252,8 @@ _SETFANSTATE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=527,
-  serialized_end=559,
+  serialized_start=551,
+  serialized_end=583,
 )
 
 
@@ -277,8 +284,8 @@ _SETAUTONOMYSTATE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=561,
-  serialized_end=603,
+  serialized_start=585,
+  serialized_end=627,
 )
 
 
@@ -316,8 +323,8 @@ _TELEMETRY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=605,
-  serialized_end=718,
+  serialized_start=629,
+  serialized_end=742,
 )
 
 
@@ -355,8 +362,8 @@ _TEMPERATUREDATA = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=720,
-  serialized_end=778,
+  serialized_start=744,
+  serialized_end=802,
 )
 
 
@@ -394,8 +401,8 @@ _FANSPEEDDATA = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=780,
-  serialized_end=829,
+  serialized_start=804,
+  serialized_end=853,
 )
 
 _MESSAGE.fields_by_name['command'].message_type = _COMMAND

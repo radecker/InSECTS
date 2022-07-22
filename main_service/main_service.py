@@ -10,8 +10,8 @@ import config_pb2
 import time
 import subprocess
 
-STARTUP_IP = "224.1.1.99"
-STARTUP_PORT = 5099
+STARTUP_IP = "224.1.1.95"
+STARTUP_PORT = 5095
 
 
 def ConvertConfigDictToProto(config: dict) -> message_pb2.Message:
@@ -29,7 +29,7 @@ if __name__ == "__main__":
     configs = ConfigLoader("config.yaml").read_config()
 
     # Convert the config dict to a protobuf message
-    msg = ConvertConfigDictToProto(configs)
+    config_msg = ConvertConfigDictToProto(configs)
     
     # Start execution of other core infrastructure services
     # TODO: This is only needed while K3 is not running
@@ -38,23 +38,14 @@ if __name__ == "__main__":
 
     # os.system("docker run --network=host autonomy_app")
 
-    # Send out the config params on the startup multicast group
-    time.sleep(3)   # 3 sec delay to wait for other services to start listening
     udp_client = UDPClient("main_service")
     udp_client.add_sender(group=STARTUP_IP, port=STARTUP_PORT)
     udp_client.add_listener(group=STARTUP_IP, port=STARTUP_PORT)
-    udp_client.send(msg, group=STARTUP_IP, port=STARTUP_PORT)
-    time.sleep(2)
-    # msg = message_pb2.Message()
-    # cmd = message_pb2.Command()
-    # sp = message_pb2.SetServoPosition()
-    # sp.servo_pos = 100.0
-    # cmd.set_servo_position.CopyFrom(sp)
-    # msg.command.CopyFrom(cmd)
-    # udp_client.add_sender(group=configs["command_multicast_ip"], port=configs["command_multicast_port"])
-    # udp_client.send(msg, group=configs["command_multicast_ip"], port=configs["command_multicast_port"])
+
     while True:
         msgs = udp_client.get_messages()
         for msg in msgs:
             if msg.destination == "main_service":
                 print(msg)
+                if msg.HasField("request_config"):
+                    udp_client.send(config_msg, group=STARTUP_IP, port=STARTUP_PORT)
