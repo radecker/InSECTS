@@ -11,10 +11,10 @@ Purpose: This app is used to connect the ground system to the vehicle via SDR or
 """
 
 class SDRApp(BaseApp):
-    def __init__(self, id: str) -> None:
+    def __init__(self) -> None:
         self.tcp_client = None
         self.tcp_send_queue = queue.Queue()
-        super().__init__(id)
+        super().__init__("vehicle.sdr_app")
 
     def setup(self):
         ip = self.config_params.sdr_tcp_client_ip
