@@ -14,7 +14,7 @@ class Arduino():
     def translate_proto_to_serial(self, msg: proto.Message) -> str:
         # All serial commands are csv format (cmd type, val1, val2..., val n)
         # This function needs to be carefully maintained until a better method is implemented
-        if msg.HasField("command"):
+        if msg.HasField("command"):     # TODO: make this capable of handling multi-commands
             if msg.command.HasField("set_servo_position"):
                 return f"1,{msg.command.set_servo_position.servo_pos}"
             if msg.command.HasField("set_fan_speed"):
@@ -23,6 +23,8 @@ class Arduino():
                 return f"3,{int(msg.command.set_fan_state.fan_state)}"
         if msg.HasField("telemetry"):
             pass
+        if msg.HasField("config_params"):
+            return f"0,{msg.config_params.telemetry_freq}"
         return None
 
     def translate_serial_to_proto(self, serial_buf):

@@ -21,6 +21,7 @@ Use Cases:
 class HalService(BaseApp):
     def __init__(self) -> None:
         self.arduino = None
+        self.sent_configs = None
         super().__init__(id="vehicle.hal_service")
 
     def _send_to_arduino(self):
@@ -34,8 +35,16 @@ class HalService(BaseApp):
     def setup(self):
         config = self.config_params
         self.arduino = Arduino(port=config.arduino_address, baudrate=config.serial_baudrate)
+        self.sent_configs = False
 
     def run(self):
+        # Send the config parameters once
+        if not self.sent_configs:
+            msg = proto.Message()
+            msg.config_params.CopyFrom(self.config_params)
+            self.arduino.send_msg(msg)
+            self.sent_configs = True
+
         # Send any command messages
         if len(self.command_queue):
             self.arduino.send_msg(self.command_queue.pop())

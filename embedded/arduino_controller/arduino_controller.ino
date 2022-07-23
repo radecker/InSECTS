@@ -1,7 +1,8 @@
 String serial_in;
 const uint8_t led_pin = 8;
-const uint8_t temp_in_1 = A0;
-static const unsigned long TELEMETRY_PERIOD = 1000; // 1000 ms between telemetry uploads
+static uint8_t temp_sensors[] = {A0, A1};
+static uint8_t num_temp_sensors = 2;
+static unsigned long TELEMETRY_PERIOD = 1000; // 1000 ms default between telemetry grabs
 
 double getTempData(uint8_t sensor_id);
 void sendTelemetry();
@@ -37,6 +38,12 @@ void runCommand(String serial)
   static uint8_t cmd = serial.substring(0,1).toInt(); // Grabs just the first character
   static String args = serial.substring(2); // Grabs everything past the first comma
 
+  if(cmd == 0)  // Config Parameters
+  {
+//    Serial.println(args.substring(0,4));
+    double freq = args.substring(0,4).toDouble();
+    TELEMETRY_PERIOD = (1.0/freq)*1000; // convert freq to period in millis
+  }
   if(cmd == 1)  // SetServoPosition
   {
     // TODO: IMPLEMENT ME
@@ -57,18 +64,22 @@ void runCommand(String serial)
 
 void sendTelemetry()
 {
-  // TODO: Implement me
+  // TODO: Finish implementation
   static double temp = 0;
-  temp = getTempData(1);
-  String serial_data = "1,1," + String(temp, 2);
-  Serial.println(serial_data);
+  for(int i = 0; i < num_temp_sensors; i++){
+    temp = getTempData(temp_sensors[i]);
+    String serial_data = "1," + String(i) + "," + String(temp, 2);
+    // serial_data = serial_data + ""
+    // serial_data = serial_data + ;
+    Serial.println(serial_data);
+  }
 }
 
 double getTempData(uint8_t sensor_id)
 {
   // TODO: Implement me
   static double val;
-  val = analogRead(temp_in_1)*(5000/1024.0);
+  val = analogRead(sensor_id)*(5000/1024.0);
   val = (val-110)/10; // 110 is about right for TMP35
   return val;
 }
