@@ -28,11 +28,12 @@ class SDRApp(BaseApp):
         if len(self.command_queue):
             for msg in self.command_queue:
                 if "ground." in msg.destination or "all" == msg.destination:
-                    self.tcp_client.send(msg=msg, dst=msg.destination)
+                    self.tcp_client.send(msg=msg, sender=msg.sender, dst=msg.destination)
         if len(self.telemetry_queue):
             for msg in self.telemetry_queue:
                 if "ground." in msg.destination or "all" == msg.destination:
-                    self.tcp_client.send(msg=msg, dst=msg.destination)
+                    print(msg)
+                    self.tcp_client.send(msg=msg, sender=msg.sender, dst=msg.destination)
 
     def shutdown(self):
         pass
