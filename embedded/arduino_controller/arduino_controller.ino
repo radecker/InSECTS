@@ -1,5 +1,6 @@
 String serial_in;
 const uint8_t led_pin = 8;
+const uint8_t temp_in_1 = A0;
 static const unsigned long TELEMETRY_PERIOD = 1000; // 1000 ms between telemetry uploads
 
 double getTempData(uint8_t sensor_id);
@@ -66,5 +67,8 @@ void sendTelemetry()
 double getTempData(uint8_t sensor_id)
 {
   // TODO: Implement me
-  return 26.0;
+  static double val;
+  val = analogRead(temp_in_1)*(5000/1024.0);
+  val = (val-110)/10; // 110 is about right for TMP35
+  return val;
 }
