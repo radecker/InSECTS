@@ -55,17 +55,18 @@ void runCommand(String serial)
   }
   if(cmd == 1)  // SetServoPosition
   {
-     if (args == "full")
+    String pos = args.substring(0,4);
+    if (pos == "full")
     {
       myservo.write(fullposition);
       currentservopostion = 0;
     }
-     else if (args == "half")
+    else if (pos == "half")
     {
       myservo.write(halfposition);
       currentservopostion = 90;
     }
-    else if (args == "close")
+    else if (pos == "clse")
     {
       myservo.write(closeposition);
       currentservopostion = 180;
