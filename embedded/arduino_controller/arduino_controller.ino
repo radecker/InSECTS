@@ -1,8 +1,15 @@
+#include <Servo.h>
+Servo myservo;  // create servo object to control a servo
+
 String serial_in;
 const uint8_t led_pin = 8;
 static uint8_t temp_sensors[] = {A0, A1};
 static uint8_t num_temp_sensors = 2;
 static unsigned long TELEMETRY_PERIOD = 1000; // 1000 ms default between telemetry grabs
+int fullposition = 0; // servo position angles
+int halfposition = 90;
+int closeposition = 180;
+int currentservopostion = 180;
 
 double getTempData(uint8_t sensor_id);
 void sendTelemetry();
@@ -12,6 +19,8 @@ void setup() {
   Serial.begin(115200);
   Serial.setTimeout(1);
   pinMode(led_pin, OUTPUT);
+  myservo.attach(9); // attaches the servo on pin 9 to the servo object
+  myservo.write(closeposition); // initial servo position
 }
 
 void loop() {
@@ -46,11 +55,22 @@ void runCommand(String serial)
   }
   if(cmd == 1)  // SetServoPosition
   {
-    // TODO: IMPLEMENT ME
-    digitalWrite(led_pin, HIGH);   // turn the LED on (HIGH is the voltage level)
-    delay(1000);                       // wait for a second
-    digitalWrite(led_pin, LOW);    // turn the LED off by making the voltage LOW
-    delay(1000);
+     if (args == "full")
+    {
+      myservo.write(fullposition);
+      currentservopostion = 0;
+    }
+     else if (args == "half")
+    {
+      myservo.write(halfposition);
+      currentservopostion = 90;
+    }
+    else if (args == "close")
+    {
+      myservo.write(closeposition);
+      currentservopostion = 180;
+    }
+    
   }
   if(cmd == 2)  // SetFanSpeed
   {
