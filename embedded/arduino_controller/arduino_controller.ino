@@ -6,10 +6,14 @@ const uint8_t led_pin = 8;
 static uint8_t temp_sensors[] = {A0, A1};
 static uint8_t num_temp_sensors = 2;
 static unsigned long TELEMETRY_PERIOD = 1000; // 1000 ms default between telemetry grabs
-int fullposition = 0; // servo position angles
-int halfposition = 90;
-int closeposition = 180;
-int currentservopostion = 180;
+int fullpos = 0; // servo position angles  *SHOULD THESE ALL BE STATIC? WHAT DATA TYPE IS BEST?*
+int halfpos = 90;
+int closepos = 180;
+int currentservopos = 180;
+int fancontrol_pin = 11;
+int fanfeedback_pin = 2; //define the interrupt pin (must be pin 2 or 3)
+int InterruptCounter;
+int fanspeed;
 
 double getTempData(uint8_t sensor_id);
 void sendTelemetry();
@@ -19,8 +23,9 @@ void setup() {
   Serial.begin(115200);
   Serial.setTimeout(1);
   pinMode(led_pin, OUTPUT);
+  pinMode(fancontrol_pin, INPUT);
   myservo.attach(9); // attaches the servo on pin 9 to the servo object
-  myservo.write(closeposition); // initial servo position
+  myservo.write(closepos); // initial servo position
 }
 
 void loop() {
@@ -55,31 +60,48 @@ void runCommand(String serial)
   }
   if(cmd == 1)  // SetServoPosition
   {
-    String pos = args.substring(0,4);
-    if (pos == "full")
+    String servoCMD = args.substring(0,4); // Grabs the first substring within "args" string
+    if (servoCMD == "full")
     {
-      myservo.write(fullposition);
-      currentservopostion = 0;
+      myservo.write(fullpos);
+      currentservopos = 0;
     }
-    else if (pos == "half")
+    else if (servoCMD == "half")
     {
-      myservo.write(halfposition);
-      currentservopostion = 90;
+      myservo.write(halfpos);
+      currentservopos = 90;
     }
-    else if (pos == "clse")
+    else if (servoCMD == "clse")
     {
-      myservo.write(closeposition);
-      currentservopostion = 180;
+      myservo.write(closepos);
+      currentservopos = 180;
     }
     
   }
   if(cmd == 2)  // SetFanSpeed
   {
-    // TODO: IMPLEMENT ME
+    String fanCMD = args.substring(0,3); // Grabs the first substring within "args" string
+    if (fanCMD == "max");
+    {
+      analogWrite(fancontrol_pin,255);
+    }
+    if (fanCMD == "75%");
+    {
+      analogWrite(fancontrol_pin,191);
+    }
+    if (fanCMD == "50%");
+    {
+      analogWrite(fancontrol_pin,127);
+    }
+    if (fanCMD == "25%");
+    {
+      analogWrite(fancontrol_pin,63);
+    }
+    // should we add a shutdown command to totally turn the fan off?
   }
   if(cmd == 3)  // SetFanState
   {
-    // TODO: IMPLEMENT ME
+    // What do we need here?
   }
 }
 
@@ -103,4 +125,21 @@ double getTempData(uint8_t sensor_id)
   val = analogRead(sensor_id)*(5000/1024.0);
   val = (val-110)/10; // 110 is about right for TMP35
   return val;
+}
+
+double getFanSpeed()
+{
+  // TODO: Get this into telemetry serial string
+  static double fanspeed;
+  InterruptCounter = 0;
+  attachInterrupt(digitalPinToInterrupt(fanfeedback_pin), counter, RISING);
+  delay(1000);
+  detachInterrupt(digitalPinToInterrupt(fanfeedback_pin));
+  fanspeed = (InterruptCounter / 2) * 60;
+  return fanspeed;
+}
+
+void counter()
+{
+  InterruptCounter++;
 }
