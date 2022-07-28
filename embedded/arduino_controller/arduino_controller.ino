@@ -5,10 +5,10 @@ String serial_in;
 const uint8_t led_pin = 8;
 
 // Global temp variables
-static uint8_t temp_sensors[] = {A0, A1};
-static double prev_temps[] = {0.0, 0.0};
-static double temps[] = {0.0, 0.0};
-static uint8_t num_temp_sensors = 2;
+uint8_t temp_sensors[] = {A0, A1};
+double prev_temps[] = {0.0, 0.0};
+double temps[] = {0.0, 0.0};
+uint8_t num_temp_sensors = 2;
 
 static unsigned long TELEMETRY_PERIOD = 1000; // 1000 ms default between telemetry grabs
 
