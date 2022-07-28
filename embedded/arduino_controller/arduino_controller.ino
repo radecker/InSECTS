@@ -10,7 +10,7 @@ static double prev_temps[] = {0.0, 0.0};
 static double temps[] = {0.0, 0.0};
 static uint8_t num_temp_sensors = 2;
 
-static unsigned long TELEMETRY_PERIOD = 100000; // 1000 ms default between telemetry grabs
+static unsigned long TELEMETRY_PERIOD = 1000; // 1000 ms default between telemetry grabs
 
 // Servo Global variables
 int fullpos = 0;
