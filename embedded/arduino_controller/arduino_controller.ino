@@ -10,15 +10,16 @@ static double prev_temps[] = {0.0, 0.0};
 static double temps[] = {0.0, 0.0};
 static uint8_t num_temp_sensors = 2;
 
-static unsigned long TELEMETRY_PERIOD = 1000; // 1000 ms default between telemetry grabs
-int fullpos = 0; // servo position angles  *SHOULD THESE ALL BE STATIC? WHAT DATA TYPE IS BEST?*
+static unsigned long TELEMETRY_PERIOD = 100000; // 1000 ms default between telemetry grabs
+
+// Servo Global variables
+int fullpos = 0;
 int halfpos = 90;
 int closepos = 180;
 int currentservopos = 180;
 int fancontrol_pin = 11;
 int fanfeedback_pin = 2; //define the interrupt pin (must be pin 2 or 3)
 int InterruptCounter;
-int fanspeed;
 
 double updateTempData(uint8_t sensor_id);
 void sendTelemetry();
@@ -51,60 +52,43 @@ void loop() {
     sendTelemetry();
   }
 
+  // Telemetry is being updated all the time in the background
   refreshTelemetryData();
 }
 
 void runCommand(String serial)
 {
   static uint8_t cmd = serial.substring(0,1).toInt(); // Grabs just the first character
-  static String args = serial.substring(2); // Grabs everything past the first comma
-
+  String args = serial.substring(2); // Grabs everything past the first comma
   if(cmd == 0)  // Config Parameters
   {
-//    Serial.println(args.substring(0,4));
     double freq = args.substring(0,4).toDouble();
     TELEMETRY_PERIOD = (1.0/freq)*1000; // convert freq to period in millis
   }
   if(cmd == 1)  // SetServoPosition
   {
-    String servoCMD = args.substring(0,4); // Grabs the first substring within "args" string
-    if (servoCMD == "full")
+    String servo_pos = args.substring(0,4); // Grabs the first substring within "args" string
+    if (servo_pos == "full")
     {
       myservo.write(fullpos);
       currentservopos = 0;
     }
-    else if (servoCMD == "half")
+    else if (servo_pos == "half")
     {
       myservo.write(halfpos);
       currentservopos = 90;
     }
-    else if (servoCMD == "clse")
+    else if (servo_pos == "clse")
     {
       myservo.write(closepos);
       currentservopos = 180;
-    }
-    
+    } 
   }
   if(cmd == 2)  // SetFanSpeed
   {
-    int fanCMD = args.substring(0,3).toInt(); // Grabs the first substring within "args" string
-    if (fanCMD == "max"); //**fix the code so any value between 0% and 100% will map to an analog value
-    {
-      analogWrite(fancontrol_pin,255);
-    }
-    if (fanCMD == "75%");
-    {
-      analogWrite(fancontrol_pin,191);
-    }
-    if (fanCMD == "50%");
-    {
-      analogWrite(fancontrol_pin,127);
-    }
-    if (fanCMD == "25%");
-    {
-      analogWrite(fancontrol_pin,63);
-    }
-    // should we add a shutdown command to totally turn the fan off?
+    static uint8_t fan_speed = args.substring(0,3).toInt(); // Grabs the first substring within "args" string
+    fan_speed = map(fan_speed, 0, 100, 0, 255);
+    analogWrite(fancontrol_pin,fan_speed);
   }
   if(cmd == 3)  // SetFanState
   {
@@ -138,7 +122,7 @@ double updateTempData()
 double getFanSpeed()
 {
   // TODO: Get this into telemetry serial string
-  static double fanspeed;
+  double fanspeed;
   InterruptCounter = 0;
   attachInterrupt(digitalPinToInterrupt(fanfeedback_pin), counter, RISING);
   delay(1000);
