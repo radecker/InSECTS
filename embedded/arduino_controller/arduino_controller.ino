@@ -80,8 +80,8 @@ void runCommand(String serial)
   }
   if(cmd == 2)  // SetFanSpeed
   {
-    String fanCMD = args.substring(0,3); // Grabs the first substring within "args" string
-    if (fanCMD == "max");
+    int fanCMD = args.substring(0,3).toInt(); // Grabs the first substring within "args" string
+    if (fanCMD == "max"); //**fix the code so any value between 0% and 100% will map to an analog value
     {
       analogWrite(fancontrol_pin,255);
     }
@@ -101,7 +101,7 @@ void runCommand(String serial)
   }
   if(cmd == 3)  // SetFanState
   {
-    // What do we need here?
+    //**On or off
   }
 }
 
