@@ -33,7 +33,7 @@ void setup() {
   pinMode(led_pin, OUTPUT);
   pinMode(fancontrol_pin, INPUT);
   myservo.attach(9); // attaches the servo on pin 9 to the servo object
-  myservo.write(closepos); // initial servo position
+  //myservo.write(closepos); // initial servo position
 }
 
 void loop() {
@@ -73,16 +73,19 @@ void runCommand(String serial)
     {
       myservo.write(fullpos);
       currentservopos = 0;
+      Serial.println("full cmd received");
     }
     else if (servo_pos == "half")
     {
       myservo.write(halfpos);
       currentservopos = 90;
+      Serial.println("half cmd received");
     }
     else if (servo_pos == "clse")
     {
       myservo.write(closepos);
       currentservopos = 180;
+      Serial.println("clse cmd received");
     } 
   }
   if(cmd == 2)  // SetFanSpeed
