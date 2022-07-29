@@ -12,11 +12,12 @@ uint8_t num_temp_sensors = 2;
 
 static unsigned long TELEMETRY_PERIOD = 1000; // 1000 ms default between telemetry grabs
 
-// Servo Global variables
+// Servo & Fan Global variables
 int fullpos = 0;
 int halfpos = 90;
 int closepos = 180;
 int currentservopos = 180;
+int fan_speed = 0;
 int fancontrol_pin = 11;
 int fanfeedback_pin = 2; //define the interrupt pin (must be pin 2 or 3)
 int InterruptCounter;
@@ -90,10 +91,10 @@ void runCommand(String serial)
     fan_speed = map(fan_speed, 0, 100, 0, 255);
     analogWrite(fancontrol_pin,fan_speed);
   }
-  if(cmd == 3)  // SetFanState
-  {
-    //**On or off
-  }
+//  if(cmd == 3)  // SetFanState
+//  {
+//    //**On or off
+//  }
 }
 
 void sendTelemetry()
