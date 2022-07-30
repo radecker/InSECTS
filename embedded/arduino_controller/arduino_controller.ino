@@ -5,19 +5,20 @@ String serial_in;
 const uint8_t led_pin = 8;
 
 // Global temp variables
-uint8_t temp_sensors[] = {A0, A1};
-double prev_temps[] = {0.0, 0.0};
-double temps[] = {0.0, 0.0};
-uint8_t num_temp_sensors = 2;
+uint8_t temp_sensors[] = {A0, A1, A2, A3, A4, A5};
+double prev_temps[] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+double temps[] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+uint8_t num_temp_sensors = 6;
 
 static unsigned long TELEMETRY_PERIOD = 1000; // 1000 ms default between telemetry grabs
 
 // Servo & Fan Global variables
-int fullpos = 0;
-int halfpos = 90;
-int closepos = 180;
-int currentservopos = 180;
+int fullpos = 0; // ***Update based on final model setup!
+int halfpos = 90; // ***Update based on final model setup!
+int closepos = 180; // ***Update based on final model setup!
+int currentservopos = 180; // ***Update based on final model setup!
 int fan_speed = 0;
+int fan_level = 0;
 int fancontrol_pin = 11;
 int fanfeedback_pin = 2; //define the interrupt pin (must be pin 2 or 3)
 int InterruptCounter;
@@ -59,7 +60,7 @@ void loop() {
 
 void runCommand(String serial)
 {
-  static uint8_t cmd = serial.substring(0,1).toInt(); // Grabs just the first character
+  uint8_t cmd = serial.substring(0,1).toInt(); // Grabs just the first character
   String args = serial.substring(2); // Grabs everything past the first comma
   if(cmd == 0)  // Config Parameters
   {
@@ -72,27 +73,28 @@ void runCommand(String serial)
     if (servo_pos == "full")
     {
       myservo.write(fullpos);
-      currentservopos = 0;
+      currentservopos = 0; // this will be adjusted once final model is built TODO: Get this into telemetry serial string
       Serial.println("full cmd received");
     }
     else if (servo_pos == "half")
     {
       myservo.write(halfpos);
-      currentservopos = 90;
+      currentservopos = 90; // this will be adjusted once final model is built TODO: Get this into telemetry serial string
       Serial.println("half cmd received");
     }
     else if (servo_pos == "clse")
     {
       myservo.write(closepos);
-      currentservopos = 180;
+      currentservopos = 180; // this will be adjusted once final model is built TODO: Get this into telemetry serial string
       Serial.println("clse cmd received");
     } 
   }
   if(cmd == 2)  // SetFanSpeed
   {
-    static uint8_t fan_speed = args.substring(0,3).toInt(); // Grabs the first substring within "args" string
-    fan_speed = map(fan_speed, 0, 100, 0, 255);
-    analogWrite(fancontrol_pin,fan_speed);
+    int fan_speed = args.substring(0,3).toInt(); // Grabs the first substring within "args" string
+    fan_level = map(fan_speed, 0, 100, 0, 255); // Below 40% the fanspeed doesn't seem to change
+    analogWrite(fancontrol_pin,fan_level);
+    Serial.println("fan cmd received");
   }
 //  if(cmd == 3)  // SetFanState
 //  {
