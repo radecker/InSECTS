@@ -21,7 +21,7 @@ import time
 # if single tmep is >110C @25% speed, increase fan speed to 50%
 #
 # if average temp <95C @50% speed, decrease fan speed to 25%
-#
+#bla
 
 # if average temp <100C @75% speed, decrease fan speed to 50%
 #
