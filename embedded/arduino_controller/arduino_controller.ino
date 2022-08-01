@@ -20,7 +20,7 @@ int currentservopos = 180; // ***Update based on final model setup!
 int fan_speed = 0;
 int fan_level = 0;
 int fancontrol_pin = 11;
-int fanfeedback_pin = 2; //define the interrupt pin (must be pin 2 or 3)
+const int fanfeedback_pin = 2; // define the interrupt pin (must be pin 2 or 3)
 int InterruptCounter;
 
 double updateTempData(uint8_t sensor_id);
@@ -34,7 +34,8 @@ void setup() {
   pinMode(led_pin, OUTPUT);
   pinMode(fancontrol_pin, INPUT);
   myservo.attach(9); // attaches the servo on pin 9 to the servo object
-  //myservo.write(closepos); // initial servo position
+  myservo.write(currentservopos);
+  analogWrite(fancontrol_pin,fan_level);
 }
 
 void loop() {
@@ -73,19 +74,19 @@ void runCommand(String serial)
     if (servo_pos == "full")
     {
       myservo.write(fullpos);
-      currentservopos = 0; // this will be adjusted once final model is built TODO: Get this into telemetry serial string
+      currentservopos = 0; // this will be adjusted once final model is built
       Serial.println("full cmd received");
     }
     else if (servo_pos == "half")
     {
       myservo.write(halfpos);
-      currentservopos = 90; // this will be adjusted once final model is built TODO: Get this into telemetry serial string
+      currentservopos = 90; // this will be adjusted once final model is built
       Serial.println("half cmd received");
     }
     else if (servo_pos == "clse")
     {
       myservo.write(closepos);
-      currentservopos = 180; // this will be adjusted once final model is built TODO: Get this into telemetry serial string
+      currentservopos = 180; // this will be adjusted once final model is built
       Serial.println("clse cmd received");
     } 
   }
@@ -96,19 +97,26 @@ void runCommand(String serial)
     analogWrite(fancontrol_pin,fan_level);
     Serial.println("fan cmd received");
   }
-//  if(cmd == 3)  // SetFanState
-//  {
-//    //**On or off
-//  }
 }
 
 void sendTelemetry()
 {
   static double temp = 0;
   for(int i = 0; i < num_temp_sensors; i++){
-    String serial_data = "1," + String(i) + "," + String(temps[i], 2);
+    String serial_data = "0," + String(i) + "," + String(temps[i], 2);
     Serial.println(serial_data);
   }
+  String serial_servo = "1," + String(currentservopos);
+  Serial.println(serial_servo); // Send servomotor position
+  double fanspeed;
+  // Interrupt counter to read tachometer signal pulses
+  InterruptCounter = 0;
+  attachInterrupt(digitalPinToInterrupt(fanfeedback_pin), counter, RISING);
+  delay(500);
+  detachInterrupt(digitalPinToInterrupt(fanfeedback_pin));
+  fanspeed = (InterruptCounter / 2) * 120; // calculates fan speed from tachometer pulses
+  String serial_fan = "2," + String(fanspeed);
+  Serial.println(serial_fan); // Send fan speed
 }
 
 void refreshTelemetryData(){
@@ -123,18 +131,6 @@ double updateTempData()
     temps[i] = (temps[i]-110)/10;     // 110 is magic offset for TMP35
     prev_temps[i] = temps[i];
   }
-}
-
-double getFanSpeed()
-{
-  // TODO: Get this into telemetry serial string
-  double fanspeed;
-  InterruptCounter = 0;
-  attachInterrupt(digitalPinToInterrupt(fanfeedback_pin), counter, RISING);
-  delay(1000);
-  detachInterrupt(digitalPinToInterrupt(fanfeedback_pin));
-  fanspeed = (InterruptCounter / 2) * 60;
-  return fanspeed;
 }
 
 void counter()
