@@ -13,10 +13,10 @@ uint8_t num_temp_sensors = 6;
 static unsigned long TELEMETRY_PERIOD = 1000; // 1000 ms default between telemetry grabs
 
 // Servo & Fan Global variables
-int fullpos = 0; // ***Update based on final model setup!
-int halfpos = 90; // ***Update based on final model setup!
-int closepos = 180; // ***Update based on final model setup!
-int currentservopos = 180; // ***Update based on final model setup!
+int fullpos = 100; //
+int halfpos = 120; //
+int closepos = 180; //
+int currentservopos = 180;
 int fan_speed = 0;
 int fan_level = 0;
 int fancontrol_pin = 11;
@@ -74,13 +74,13 @@ void runCommand(String serial)
     if (servo_pos == "full")
     {
       myservo.write(fullpos);
-      currentservopos = 0; // this will be adjusted once final model is built
+      currentservopos = 100; // this will be adjusted once final model is built
       Serial.println("full cmd received");
     }
     else if (servo_pos == "half")
     {
       myservo.write(halfpos);
-      currentservopos = 90; // this will be adjusted once final model is built
+      currentservopos = 120; // this will be adjusted once final model is built
       Serial.println("half cmd received");
     }
     else if (servo_pos == "clse")
