@@ -95,24 +95,32 @@ void runCommand(String serial)
     int fan_speed = args.substring(0,3).toInt(); // Grabs the first substring within "args" string
     fan_level = map(fan_speed, 0, 100, 0, 255); // Below 40% the fanspeed doesn't seem to change
     analogWrite(fancontrol_pin,fan_level);
-    Serial.println("fan cmd received");
+    // Serial.println("fan cmd received"); TODO: remove when done testing
   }
 }
 
 void sendTelemetry()
 {
+  // Telemetry is sent in a csv format and parsing must be implemented in the HAL
+  // E.g. temp = 1,26.30 translates into telemetry type 1 and 26.30 degrees C
+  
+  // Send temperature data
   static double temp = 0;
   for(int i = 0; i < num_temp_sensors; i++){
     String serial_data = "0," + String(i) + "," + String(temps[i], 2);
     Serial.println(serial_data);
   }
+
+  // Send servo position
   String serial_servo = "1," + String(currentservopos);
   Serial.println(serial_servo); // Send servomotor position
+
+  // Send the current fan speed
   double fanspeed;
   // Interrupt counter to read tachometer signal pulses
   InterruptCounter = 0;
   attachInterrupt(digitalPinToInterrupt(fanfeedback_pin), counter, RISING);
-  delay(500);
+  delay(500); // This pauses all execution, we need to swap out with non blocking version or reduce time
   detachInterrupt(digitalPinToInterrupt(fanfeedback_pin));
   fanspeed = (InterruptCounter / 2) * 120; // calculates fan speed from tachometer pulses
   String serial_fan = "2," + String(fanspeed);
