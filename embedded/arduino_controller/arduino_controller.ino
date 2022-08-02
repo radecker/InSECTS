@@ -5,10 +5,10 @@ String serial_in;
 const uint8_t led_pin = 8;
 
 // Global temp variables
-uint8_t temp_sensors[] = {A0, A1, A2, A3, A4, A5};
-double prev_temps[] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
-double temps[] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
-uint8_t num_temp_sensors = 6;
+uint8_t temp_sensors[] = {A0, A1}; // , A2, A3, A4, A5};
+double prev_temps[] = {0.0, 0.0}; //, 0.0, 0.0, 0.0, 0.0};
+double temps[] = {0.0, 0.0}; //, 0.0, 0.0, 0.0, 0.0};
+uint8_t num_temp_sensors = 2;
 
 static unsigned long TELEMETRY_PERIOD = 1000; // 1000 ms default between telemetry grabs
 
@@ -70,20 +70,20 @@ void runCommand(String serial)
   }
   if(cmd == 1)  // SetServoPosition
   {
-    String servo_pos = args.substring(0,4); // Grabs the first substring within "args" string
-    if (servo_pos == "full")
+    uint8_t servo_pos = args.substring(0,3).toInt(); // Grabs the first substring within "args" string
+    if (servo_pos == 2)
     {
       myservo.write(fullpos);
       currentservopos = 0; // this will be adjusted once final model is built
       Serial.println("full cmd received");
     }
-    else if (servo_pos == "half")
+    else if (servo_pos == 1)
     {
       myservo.write(halfpos);
       currentservopos = 90; // this will be adjusted once final model is built
       Serial.println("half cmd received");
     }
-    else if (servo_pos == "clse")
+    else if (servo_pos == 0)
     {
       myservo.write(closepos);
       currentservopos = 180; // this will be adjusted once final model is built
@@ -105,12 +105,12 @@ void sendTelemetry()
   // E.g. temp = 1,26.30 translates into telemetry type 1 and 26.30 degrees C
   
   // Send temperature data
-  static double temp = 0;
+  double temp = 0;
   for(int i = 0; i < num_temp_sensors; i++){
     String serial_data = "0," + String(i) + "," + String(temps[i], 2);
     Serial.println(serial_data);
   }
-
+/*
   // Send servo position
   String serial_servo = "1," + String(currentservopos);
   Serial.println(serial_servo); // Send servomotor position
@@ -125,6 +125,7 @@ void sendTelemetry()
   fanspeed = (InterruptCounter / 2) * 120; // calculates fan speed from tachometer pulses
   String serial_fan = "2," + String(fanspeed);
   Serial.println(serial_fan); // Send fan speed
+*/
 }
 
 void refreshTelemetryData(){
@@ -135,9 +136,10 @@ void refreshTelemetryData(){
 double updateTempData()
 {
   for(int i = 0; i < num_temp_sensors; i++){
-    temps[i] = (analogRead(temp_sensors[i])*(5000/1024.0) + prev_temps[i])/2; // Averaging filter
+    temps[i] = analogRead(temp_sensors[i])*(5000/1024.0);  // Averaging filter
     temps[i] = (temps[i]-110)/10;     // 110 is magic offset for TMP35
     prev_temps[i] = temps[i];
+    temps[i] = (temps[i] + prev_temps[i])/2.0;
   }
 }
 
