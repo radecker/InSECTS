@@ -92,6 +92,7 @@ class AutonomyApp (BaseApp):
         cmd.set_fan_speed.CopyFrom(fan_cmd)
         msg.command.CopyFrom(cmd)
         print(msg)
+        self.send_command(msg)
 
         msg = proto.Message()
         cmd = proto.Command()
@@ -99,6 +100,7 @@ class AutonomyApp (BaseApp):
         servo_cmd.servo_pos = self.baffle
         cmd.set_servo_position.CopyFrom(servo_cmd)
         msg.command.CopyFrom(cmd)
+        self.send_command(msg)
         print(msg)
             
     def setup(self) -> None:

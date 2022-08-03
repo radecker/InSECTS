@@ -5,9 +5,9 @@ String serial_in;
 const uint8_t led_pin = 8;
 
 // Global temp variables
-uint8_t temp_sensors[] = {A0, A1}; // , A2, A3, A4, A5};
-double prev_temps[] = {0.0, 0.0}; //, 0.0, 0.0, 0.0, 0.0};
-double temps[] = {0.0, 0.0}; //, 0.0, 0.0, 0.0, 0.0};
+uint8_t temp_sensors[] = {A0, A1};  //, A2, A3, A4, A5};
+double prev_temps[] = {0.0, 0.0};   //, 0.0, 0.0, 0.0, 0.0};
+double temps[] = {0.0, 0.0};        //, 0.0, 0.0, 0.0, 0.0};
 uint8_t num_temp_sensors = 2;
 
 static unsigned long TELEMETRY_PERIOD = 1000; // 1000 ms default between telemetry grabs
@@ -75,19 +75,19 @@ void runCommand(String serial)
     {
       myservo.write(fullpos);
       currentservopos = 0; // this will be adjusted once final model is built
-      Serial.println("full cmd received");
+      //Serial.println("full cmd received");
     }
     else if (servo_pos == 1)
     {
       myservo.write(halfpos);
       currentservopos = 90; // this will be adjusted once final model is built
-      Serial.println("half cmd received");
+      //Serial.println("half cmd received");
     }
     else if (servo_pos == 0)
     {
       myservo.write(closepos);
       currentservopos = 180; // this will be adjusted once final model is built
-      Serial.println("clse cmd received");
+      //Serial.println("clse cmd received");
     } 
   }
   if(cmd == 2)  // SetFanSpeed
