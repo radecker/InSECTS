@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: raspi-monitor
+spec:
+  selector:
+    matchLabels:
+      app: raspi-monitor
+template:
+  metadata:
+    labels:
+      app: raspi-monitor
+  spec:
+    containers:
+      - name: raspi-monitor
+        image: <repo>:<tag>
+        imagePullPolicy: Always
+        securityContext:
+          privileged: true
+        env:
+          - name: NODE_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
