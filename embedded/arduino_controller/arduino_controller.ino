@@ -92,6 +92,12 @@ void runCommand(String serial)
   }
   if(cmd == 2)  // SetFanSpeed
   {
+    for(int i = 0; i < 10; i++){
+      digitalWrite(led_pin, HIGH);
+      delay(1000);
+      digitalWrite(led_pin, LOW);
+      delay(1000);
+    }
     int fan_speed = args.substring(0,3).toInt(); // Grabs the first substring within "args" string
     fan_level = map(fan_speed, 0, 100, 0, 255); // Below 40% the fanspeed doesn't seem to change
     analogWrite(fancontrol_pin,fan_level);
