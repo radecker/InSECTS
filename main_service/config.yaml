@@ -16,6 +16,6 @@
   sdr_tcp_client_port: 5005
 
   # ---- hal_service ----
-  arduino_address: "/dev/ttyACM1"
+  arduino_address: "/dev/ttyACM0"
   serial_baudrate: 115200
 
