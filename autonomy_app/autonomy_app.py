@@ -15,26 +15,26 @@ import statistics
 # initial: baffle = closed
 #
 # if average temp >95C @ 25% speed, increase fan speed to 50%
-# if single temp is >100C @25% speed, increase fan speed to 50%
+# if single temp is >100C @ 25% speed, increase fan speed to 50%
 
 # if average temp >100C @ 50% speed, increase fan speed to 75%
-# if single tmep is >105C @25% speed, increase fan speed to 50%
+# if single tmep is >105C @ 25% speed, increase fan speed to 50%
 
 # if average temp >105C @ 75% speed, increase fan speed to 100%
-# if single tmep is >110C @25% speed, increase fan speed to 50%
+# if single tmep is >110C @ 25% speed, increase fan speed to 50%
 #
-# if average temp <95C @50% speed, decrease fan speed to 25%
-#bla
+# if average temp is <95C @ 50% speed, decrease fan speed to 25%
+# if single temp is <70C @ 50% speed, decrease fan speed to 25% 
 
-# if average temp <100C @75% speed, decrease fan speed to 50%
-#
+# if average temp is <100C @75% speed, decrease fan speed to 50%
+# if single temp is <75C @ 75% speed, decrease fan speed to 50% 
 
-# if average temp <105C @100% speed, decrease fan speed to 75%
-#
+# if average temp is <105C @ 100% speed, decrease fan speed to 75%
+# if single temp is <80C @ 100% speed, decrease fan speed to 75% 
 
 # if fan (0) OR servomotor (1) temp >50C @ baffle = closed, set baffle = half-open
 # if fan OR servomotor temp >50C @ baffle = half-open, set baffle = full-open
-#
+
 # if fan OR servomotor temp <0C @ baffle = full-open, set baffle = half-open
 # if fan OR servomotor temp <0C @ baffle = half-open, set baffle = closed
 
@@ -42,6 +42,34 @@ import statistics
 # X axis sensor 0 to sensor 5 
 # Y axis sensor temp time taken 
 # 1 output every second from each sensor 1 through 5
+# Top row is the time stamp
+# 2nd row is sensor 1 (ServoMotor)
+# 3rd row is sensor 2 (Baffle)
+# 4th row is sensor 3
+# 5th row is sensor 4
+# 6th row is sensor 5 (heater)
+
+# Sensor Key in Script 
+# 0 is ServoMotor 
+# 1 is Baffle 
+# 2 is xxx
+# 3 is XXX
+# 4 is heater 
+
+# Baffle Settings
+# 0 is Closed 
+# 1 is 1/2 open 
+# 2 is full open 
+
+# Fan Settings 
+# 0 is off 
+# 1 is 25% 
+# 2 is 50% 
+# 3 is 75% 
+# 4 is 100% 
+
+
+
 
 
 class AutonomyApp (BaseApp):
