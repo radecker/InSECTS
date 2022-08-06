@@ -13,8 +13,8 @@ uint8_t num_temp_sensors = 6;
 static unsigned long TELEMETRY_PERIOD = 1000; // 1000 ms default between telemetry grabs
 
 // Servo & Fan Global variables
-int fullpos = 0; // ***Update based on final model setup!
-int halfpos = 90; // ***Update based on final model setup!
+int fullpos = 100; // ***Update based on final model setup!
+int halfpos = 120; // ***Update based on final model setup!
 int closepos = 180; // ***Update based on final model setup!
 int currentservopos = 180; // ***Update based on final model setup!
 int fan_speed = 0;
@@ -75,29 +75,23 @@ void runCommand(String serial)
     {
       myservo.write(fullpos);
       currentservopos = 0; // this will be adjusted once final model is built
-      //Serial.println("full cmd received");
+//      Serial.println("full cmd received");
     }
     else if (servo_pos == 1)
     {
       myservo.write(halfpos);
       currentservopos = 90; // this will be adjusted once final model is built
-      //Serial.println("half cmd received");
+//      Serial.println("half cmd received");
     }
     else if (servo_pos == 0)
     {
       myservo.write(closepos);
       currentservopos = 180; // this will be adjusted once final model is built
-      //Serial.println("clse cmd received");
+//      Serial.println("clse cmd received");
     } 
   }
   if(cmd == 2)  // SetFanSpeed
   {
-    for(int i = 0; i < 10; i++){
-      digitalWrite(led_pin, HIGH);
-      delay(1000);
-      digitalWrite(led_pin, LOW);
-      delay(1000);
-    }
     int fan_speed = args.substring(0,3).toInt(); // Grabs the first substring within "args" string
     fan_level = map(fan_speed, 0, 100, 0, 255); // Below 40% the fanspeed doesn't seem to change
     analogWrite(fancontrol_pin,fan_level);
@@ -116,22 +110,27 @@ void sendTelemetry()
     String serial_data = "0," + String(i) + "," + String(temps[i], 2);
     Serial.println(serial_data);
   }
+
+//    String serial_data = "0," + String(5) + "," + String(temps[5], 2);
+//    Serial.println(serial_data);
+
+
 /*
   // Send servo position
   String serial_servo = "1," + String(currentservopos);
   Serial.println(serial_servo); // Send servomotor position
-
+*/
   // Send the current fan speed
   double fanspeed;
   // Interrupt counter to read tachometer signal pulses
   InterruptCounter = 0;
   attachInterrupt(digitalPinToInterrupt(fanfeedback_pin), counter, RISING);
-  delay(500); // This pauses all execution, we need to swap out with non blocking version or reduce time
+  delay(100); // This pauses all execution, we need to swap out with non blocking version or reduce time
   detachInterrupt(digitalPinToInterrupt(fanfeedback_pin));
   fanspeed = (InterruptCounter / 2) * 120; // calculates fan speed from tachometer pulses
   String serial_fan = "2," + String(fanspeed);
   Serial.println(serial_fan); // Send fan speed
-*/
+
 }
 
 void refreshTelemetryData(){
@@ -143,9 +142,9 @@ double updateTempData()
 {
   for(int i = 0; i < num_temp_sensors; i++){
     temps[i] = analogRead(temp_sensors[i])*(5000/1024.0);  // Averaging filter
-    temps[i] = (temps[i]-110)/10;     // 110 is magic offset for TMP35
+    temps[i] = (temps[i]-190)/10;     // 110 is magic offset for TMP35
     prev_temps[i] = temps[i];
-    temps[i] = (temps[i] + prev_temps[i])/num_temp_sensors;
+    temps[i] = (temps[i] + prev_temps[i])/2.0;
   }
 }
 
