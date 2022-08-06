@@ -18,7 +18,15 @@ class Arduino():
             if msg.command.HasField("set_servo_position"):
                 return f"1,{msg.command.set_servo_position.servo_pos}"
             if msg.command.HasField("set_fan_speed"):
-                return f"2,{msg.command.set_fan_speed.fan_speed}"
+                num = msg.command.set_fan_speed.fan_speed
+                if num < 10:
+                    val = f"000"
+                if num < 100:
+                    val = f"0{str(num)}"
+                if num >= 100:
+                    val = f"100"
+                print(val)
+                return f"2,{val}"
             if msg.command.HasField("set_fan_state"):
                 return f"3,{int(msg.command.set_fan_state.fan_state)}"
         if msg.HasField("telemetry"):

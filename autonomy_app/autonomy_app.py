@@ -47,7 +47,7 @@ import statistics
 class AutonomyApp (BaseApp):
     def __init__(self) -> None:
         self.baffle = 0     # 0 is closed 1 is half 2 is open
-        self.fanspeed = 1   # 0 is off 1 is 25% 2 is 50% 3 is 75% 4 is 100%
+        self.fanspeed = 25   # 0 is off 1 is 25% 2 is 50% 3 is 75% 4 is 100%
         self.manual_mode = None
         self.temp_data = dict()
         super().__init__("vehicle.autonomy_app")
@@ -104,58 +104,64 @@ class AutonomyApp (BaseApp):
         print(msg)
             
     def setup(self) -> None:
-        self.manual_mode = False
+        self.manual_mode = True
         print("Autonomy System Online")
     
     def run(self) -> None:
         # Read commands and telem
         if len(self.command_queue):
-            pass
+            for msg in self.command_queue:
+                if msg.command.HasField("set_autonomy_state"):
+                    print(type(msg.command.set_autonomy_state.autonomy_state))
+                    print(msg.command.set_autonomy_state.autonomy_state)
+                    self.manual_mode = True
+                    self.manual_mode = msg.command.set_autonomy_state.autonomy_state
         if len(self.telemetry_queue):
             self.read_tempSensors()
-        if not self.manual_mode:
+        if self.manual_mode:
             alltemps = []
+            print("[Autonomous Mode]")
             for sensor in self.temp_data.values():
                 for temp in sensor:
                     alltemps.append(temp)
             if len(alltemps) > 2:
-                if statistics.mean(alltemps) > 95 and self.fanspeed == 25: 
+                if statistics.mean(alltemps) > 15 and self.fanspeed == 25: 
                     self.fanspeed = 50
-                elif statistics.mean(alltemps) > 100 and self.fanspeed == 50: 
+                elif statistics.mean(alltemps) > 20 and self.fanspeed == 50: 
                     self.fanspeed = 75
-                elif statistics.mean(alltemps) > 105 and self.fanspeed == 75: 
+                elif statistics.mean(alltemps) > 25 and self.fanspeed == 75: 
                     self.fanspeed = 100
-                elif statistics.mean(alltemps) < 95 and self.fanspeed >= 50: 
+                elif statistics.mean(alltemps) < 13 and self.fanspeed >= 50: 
                     self.fanspeed = 25
-                elif statistics.mean(alltemps) < 100 and self.fanspeed >= 75: 
+                elif statistics.mean(alltemps) < 18 and self.fanspeed >= 75: 
                     self.fanspeed = 50
-                elif statistics.mean(alltemps) < 105 and self.fanspeed == 100: 
+                elif statistics.mean(alltemps) < 23 and self.fanspeed == 100: 
                     self.fanspeed = 75
                         
-                if max(alltemps) > 100 and self.fanspeed == 25:
+                if max(alltemps) > 50 and self.fanspeed == 25:
                     self.fanspeed = 50
-                elif max(alltemps) > 105 and self.fanspeed == 50:
+                elif max(alltemps) > 55 and self.fanspeed == 50:
                     self.fanspeed = 75
-                elif max(alltemps) > 110 and self.fanspeed == 75:
+                elif max(alltemps) > 60 and self.fanspeed == 75:
                     self.fanspeed = 100
-                elif max(alltemps) < 100 and self.fanspeed >= 50:
+                elif max(alltemps) < 8 and self.fanspeed >= 50:
                     self.fanspeed = 25
-                elif max(alltemps) < 105 and self.fanspeed >= 75:
+                elif max(alltemps) < 10 and self.fanspeed >= 75:
                     self.fanspeed = 50
-                elif max(alltemps) < 110 and self.fanspeed == 100:
+                elif max(alltemps) < 12 and self.fanspeed == 100:
                     self.fanspeed = 75
 
-                if (alltemps[0] > 50 or alltemps[1] > 50) and self.baffle == 0: 
+                if (alltemps[0] > 20 or alltemps[1] > 50) and self.baffle == 0: 
                     self.baffle = 1
-                elif (alltemps[0] > 55 or alltemps[1] > 55) and self.baffle == 1: 
+                elif (alltemps[0] > 25 or alltemps[1] > 55) and self.baffle == 1: 
                     self.baffle = 2
-                elif (alltemps[0] < 50 or alltemps[1] < 50) and self.baffle >= 1: 
+                elif (alltemps[0] < 15 or alltemps[1] < 50) and self.baffle >= 1: 
                         self.baffle = 0
-                elif (alltemps[0] < 55 or alltemps[1] < 55) and self.baffle == 2: 
+                elif (alltemps[0] < 22 or alltemps[1] < 55) and self.baffle == 2: 
                         self.baffle = 1
                     
                 self.send_fanspeed_and_baffle()
-                time.sleep(5)
+            time.sleep(5)
 
 if __name__ == "__main__":
     a= AutonomyApp()
