@@ -5,10 +5,10 @@ String serial_in;
 const uint8_t led_pin = 8;
 
 // Global temp variables
-uint8_t temp_sensors[] = {A0, A1};  //, A2, A3, A4, A5};
-double prev_temps[] = {0.0, 0.0};   //, 0.0, 0.0, 0.0, 0.0};
-double temps[] = {0.0, 0.0};        //, 0.0, 0.0, 0.0, 0.0};
-uint8_t num_temp_sensors = 2;
+uint8_t temp_sensors[] = {A0, A1, A2, A3, A4, A5};
+double prev_temps[] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+double temps[] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+uint8_t num_temp_sensors = 6;
 
 static unsigned long TELEMETRY_PERIOD = 1000; // 1000 ms default between telemetry grabs
 
@@ -145,7 +145,7 @@ double updateTempData()
     temps[i] = analogRead(temp_sensors[i])*(5000/1024.0);  // Averaging filter
     temps[i] = (temps[i]-110)/10;     // 110 is magic offset for TMP35
     prev_temps[i] = temps[i];
-    temps[i] = (temps[i] + prev_temps[i])/2.0;
+    temps[i] = (temps[i] + prev_temps[i])/num_temp_sensors;
   }
 }
 
