@@ -37,7 +37,9 @@ class Arduino():
             data.sensor_value = float(serial[2])
             tlm.temperature_data.CopyFrom(data)
         if serial[1] == '1':
-            pass
+            data = proto.FanSpeedData()
+            data.fan_speed = float(serial[2])
+            tlm.temperature_data.CopyFrom(data)
         msg.telemetry.CopyFrom(tlm)
 
         return msg

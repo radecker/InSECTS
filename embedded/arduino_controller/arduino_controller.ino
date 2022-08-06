@@ -128,9 +128,8 @@ void sendTelemetry()
   delay(100); // This pauses all execution, we need to swap out with non blocking version or reduce time
   detachInterrupt(digitalPinToInterrupt(fanfeedback_pin));
   fanspeed = (InterruptCounter / 2) * 120; // calculates fan speed from tachometer pulses
-  String serial_fan = "2," + String(fanspeed);
+  String serial_fan = "2," + String(fanspeed, 2);
   Serial.println(serial_fan); // Send fan speed
-
 }
 
 void refreshTelemetryData(){
